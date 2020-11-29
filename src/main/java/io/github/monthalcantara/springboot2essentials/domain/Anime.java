@@ -25,6 +25,10 @@ public class Anime {
         return id;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getNome() {
         return nome;
     }

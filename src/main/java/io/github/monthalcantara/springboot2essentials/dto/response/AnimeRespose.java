@@ -1,4 +1,4 @@
-package io.github.monthalcantara.springboot2essentials.controller;
+package io.github.monthalcantara.springboot2essentials.dto.response;
 
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 
@@ -11,8 +11,9 @@ public class AnimeRespose {
     }
 
     public AnimeRespose(Anime anime) {
-    this.nome = anime.getNome();
+        this.nome = anime.getNome();
     }
+
     public String getNome() {
         return nome;
     }
