@@ -4,7 +4,7 @@ import io.github.monthalcantara.springboot2essentials.compartilhado.validators.E
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 import io.github.monthalcantara.springboot2essentials.dto.request.AtualizaAnimeRequest;
 import io.github.monthalcantara.springboot2essentials.dto.request.NovoAnimeRequest;
-import io.github.monthalcantara.springboot2essentials.dto.response.AnimeRespose;
+import io.github.monthalcantara.springboot2essentials.dto.response.AnimeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -34,8 +34,8 @@ public class AnimeController {
     @Transactional
     public ResponseEntity buscaTodosAnimes() {
         List<Anime> listaAnimes = manager.createQuery("Select a from Anime a").getResultList();
-        List<AnimeRespose> animeResposes = listaAnimes.stream().map(AnimeRespose::new).collect(Collectors.toList());
-        return ResponseEntity.ok(animeResposes);
+        List<AnimeResponse> animeResponses = listaAnimes.stream().map(AnimeResponse::new).collect(Collectors.toList());
+        return ResponseEntity.ok(animeResponses);
     }
 
     @GetMapping("/{id}")
@@ -44,7 +44,15 @@ public class AnimeController {
             message = "Não existe registro de anime com esse id informado") @PathVariable(value = "id") Long id) {
         Anime anime = manager.find(Anime.class, id);
         Assert.state(anime != null, "Chegou uma busca de um id que não existe no banco aqui no endpoint de busca anime. Validação do endopint não funcionou");
-        return ResponseEntity.ok(new AnimeRespose(anime));
+        return ResponseEntity.ok(new AnimeResponse(anime));
+    }
+
+    @GetMapping("/nome/{nome}")
+    @Transactional
+    public ResponseEntity buscaAnimePorNome(@PathVariable("nome") String nome) {
+        List<Anime> resultList = manager.createQuery("Select a from Anime a where nome like :nome").setParameter("nome", nome).getResultList();
+        List<AnimeResponse> listaResponse = resultList.stream().map(AnimeResponse::new).collect(Collectors.toList());
+        return ResponseEntity.ok(listaResponse);
     }
 
     @PostMapping
@@ -54,7 +62,7 @@ public class AnimeController {
         Anime anime = novoAnimeRequest.toModel();
         manager.persist(anime);
         URI uri = builder.path("/animes/{id}").buildAndExpand(anime.getId()).toUri();
-        return ResponseEntity.created(uri).body(new AnimeRespose(anime));
+        return ResponseEntity.created(uri).body(new AnimeResponse(anime));
     }
 
     @PutMapping
@@ -63,7 +71,7 @@ public class AnimeController {
         Anime anime = manager.find(Anime.class, atualizaAnimeRequest.getId());
         anime.setNome(atualizaAnimeRequest.getNome());
         manager.merge(anime);
-        return ResponseEntity.ok(new AnimeRespose(anime));
+        return ResponseEntity.ok(new AnimeResponse(anime));
     }
 
     @DeleteMapping("/{id}")
@@ -74,5 +82,6 @@ public class AnimeController {
         Assert.state(Optional.ofNullable(anime).isPresent(), "Chegou uma busca de um id que não existe no banco aqui no endpoint de deleta anime. Validação do endopint não funcionou");
         manager.remove(anime);
     }
+
 
 }
