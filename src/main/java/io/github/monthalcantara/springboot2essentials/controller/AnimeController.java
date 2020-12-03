@@ -1,6 +1,6 @@
 package io.github.monthalcantara.springboot2essentials.controller;
 
-import io.github.monthalcantara.springboot2essentials.AnimeRepository;
+import io.github.monthalcantara.springboot2essentials.repository.AnimeRepository;
 import io.github.monthalcantara.springboot2essentials.compartilhado.validators.ExisteId;
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 import io.github.monthalcantara.springboot2essentials.dto.request.AtualizaAnimeRequest;

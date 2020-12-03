@@ -1,4 +1,4 @@
-package io.github.monthalcantara.springboot2essentials;
+package io.github.monthalcantara.springboot2essentials.repository;
 
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 import org.springframework.data.jpa.repository.JpaRepository;

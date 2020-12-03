@@ -1,6 +1,7 @@
 package io.github.monthalcantara.springboot2essentials;
 
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
+import io.github.monthalcantara.springboot2essentials.repository.AnimeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
