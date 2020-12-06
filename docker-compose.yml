@@ -19,6 +19,10 @@ services:
     - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
     - "9090:9090"
+  grafana:
+    image: grafana/grafana:5.1.0
+    ports:
+      - 3000:3000
 volumes:
   devdojo_data:
 
