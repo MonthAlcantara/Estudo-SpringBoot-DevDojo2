@@ -4,6 +4,7 @@ import io.github.monthalcantara.springboot2essentials.compartilhado.validators.E
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Base64;
 
 public class AtualizaAnimeRequest {
 
@@ -33,4 +34,5 @@ public class AtualizaAnimeRequest {
     public Long getId() {
         return id;
     }
+
 }
