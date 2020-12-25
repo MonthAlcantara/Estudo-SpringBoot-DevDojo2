@@ -10,12 +10,12 @@ public class Anime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "O nome do anime precisa ser informado")
     @Column(nullable = false,unique = true)
     private String nome;
 
     @Deprecated
-    private Anime() {
+    public Anime() {
     }
     public Anime(String nome) {
         this.nome = nome;
