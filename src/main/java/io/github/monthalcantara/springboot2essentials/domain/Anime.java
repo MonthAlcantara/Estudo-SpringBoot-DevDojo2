@@ -11,12 +11,13 @@ public class Anime {
     private Long id;
 
     @NotBlank(message = "O nome do anime precisa ser informado")
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @Deprecated
     public Anime() {
     }
+
     public Anime(String nome) {
         this.nome = nome;
     }
@@ -31,5 +32,9 @@ public class Anime {
 
     public String getNome() {
         return nome;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

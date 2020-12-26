@@ -1,42 +1,46 @@
 package io.github.monthalcantara.springboot2essentials.controller;
 
 import io.github.monthalcantara.springboot2essentials.repository.AnimeRepository;
-import io.github.monthalcantara.springboot2essentials.domain.Anime;
-import io.github.monthalcantara.springboot2essentials.dto.request.NovoAnimeRequest;
+import io.github.monthalcantara.springboot2essentials.util.AnimeCreator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
-@DataJpaTest
+//@WebMvcTest
+@ExtendWith(SpringExtension.class)
+//@SpringBootTest
 @DisplayName("Teste controller de Animes")
 public class AnimeControllerTest {
 
-    @Autowired
-    private AnimeRepository repository;
 
-    @MockBean
-    private UriComponentsBuilder builder;
-    private AnimeController animeController = new AnimeController(repository);
+    @InjectMocks
+    private AnimeController animeController;
 
+    private AnimeRepository repository = Mockito.mock(AnimeRepository.class);
 
 
     @Test
-    @DisplayName("Deveria Salvar novo Anime")
-    void salvaAnimeTest(){
-     //   Mockito.when(builder.build(Mockito.anyString()).)
-        animeController.salvaAnime(criaNovoRequest(), builder);
-        Optional<Anime> anime = repository.findById(1L);
-        Assertions.assertTrue(anime.isPresent());
-    }
+    @DisplayName("Deveria buscar todos os animes")
+    void buscaTodosAnimes(){
+        Mockito.when(repository.findAll()).thenReturn(List.of(AnimeCreator.createAnimeSalvo()));
+        ResponseEntity responseEntity = animeController.buscaTodosAnimes();
 
-    private NovoAnimeRequest criaNovoRequest(){
-        return new NovoAnimeRequest("Dbz");
+        Assertions.assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+        Assertions.assertNotNull(responseEntity.getBody());
     }
 
 }
