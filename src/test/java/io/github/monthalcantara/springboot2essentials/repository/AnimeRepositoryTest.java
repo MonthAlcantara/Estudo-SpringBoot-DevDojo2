@@ -2,6 +2,7 @@ package io.github.monthalcantara.springboot2essentials.repository;
 
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,21 @@ public class AnimeRepositoryTest {
 
     @Autowired
     private AnimeRepository repository;
+    private Anime animeASerSalvo;
+    private Anime animeSalvo;
+
+    //Antes de cada método é executado esse bloco
+    @BeforeEach
+    void init() {
+        animeASerSalvo = createAnime();
+        animeSalvo = repository.save(animeASerSalvo);
+
+    }
 
     @Test
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Deveria Salvar o anime")
     public void save() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
 
         Assertions.assertNotNull(animeSalvo);
         Assertions.assertNotNull(animeSalvo.getId());
@@ -53,15 +62,18 @@ public class AnimeRepositoryTest {
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Deveria Atualizar o anime")
     public void merge() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
 
         Assertions.assertEquals(animeSalvo.getNome(), animeASerSalvo.getNome());
         Long animeSalvoId = animeSalvo.getId();
         animeSalvo.setNome("Pokemon");
+
         Anime animeAtualizado = repository.save(animeSalvo);
         Assertions.assertEquals(animeAtualizado.getNome(), "Pokemon");
+
+
         Assertions.assertEquals(animeSalvoId, animeAtualizado.getId());
+        Assertions.assertNotEquals(animeASerSalvo.getNome(), animeAtualizado.getNome());
+
 
     }
 
@@ -69,8 +81,6 @@ public class AnimeRepositoryTest {
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Deveria Deletar o anime")
     public void delete() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
         Assertions.assertNotNull(animeSalvo);
 
         repository.delete(animeSalvo);
@@ -82,21 +92,18 @@ public class AnimeRepositoryTest {
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Deveria buscar o anime por nome")
     public void findByNome() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
         Assertions.assertNotNull(animeSalvo);
 
         List<Anime> dbz = repository.findByNome("Dbz");
         Assertions.assertFalse(dbz.isEmpty());
-        Assertions.assertTrue(dbz.size() == 1);
+        Assertions.assertTrue(dbz.size() > 0);
     }
 
     @Test
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Não Deveria buscar um anime que não existe por nome")
     public void findByNomeFail() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
+
         Assertions.assertNotNull(animeSalvo);
 
         List<Anime> dbz = repository.findByNome("xxx");
@@ -108,10 +115,9 @@ public class AnimeRepositoryTest {
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Deveria buscar o anime pelo id")
     public void findById() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
-        Assertions.assertNotNull(animeSalvo);
 
+        Assertions.assertNotNull(animeSalvo);
+        System.out.println(animeSalvo.getId());
         Optional<Anime> animeOptional = repository.findById(animeSalvo.getId());
         Assertions.assertTrue(animeOptional.isPresent());
     }
@@ -120,8 +126,7 @@ public class AnimeRepositoryTest {
     //O nome que aparecerá no display ao rodar o método de teste
     @DisplayName("Não deveria buscar um anime que não existe no banco pelo id")
     public void findByIdFail() {
-        Anime animeASerSalvo = createAnime();
-        Anime animeSalvo = repository.save(animeASerSalvo);
+
         Assertions.assertNotNull(animeSalvo);
 
         Optional<Anime> animeOptional = repository.findById(50L);
