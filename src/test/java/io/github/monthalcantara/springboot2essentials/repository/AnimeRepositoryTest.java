@@ -1,13 +1,16 @@
 package io.github.monthalcantara.springboot2essentials.repository;
 
 import io.github.monthalcantara.springboot2essentials.domain.Anime;
+import io.github.monthalcantara.springboot2essentials.util.AnimeCreator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
@@ -40,10 +43,11 @@ public class AnimeRepositoryTest {
     private Anime animeASerSalvo;
     private Anime animeSalvo;
 
+
     //Antes de cada método é executado esse bloco
     @BeforeEach
     void init() {
-        animeASerSalvo = createAnime();
+        animeASerSalvo = new AnimeCreator().comNome("Dbz").build();
         animeSalvo = repository.save(animeASerSalvo);
 
     }
@@ -63,7 +67,6 @@ public class AnimeRepositoryTest {
     @DisplayName("Deveria Atualizar o anime")
     public void merge() {
 
-        Assertions.assertEquals(animeSalvo.getNome(), animeASerSalvo.getNome());
         Long animeSalvoId = animeSalvo.getId();
         animeSalvo.setNome("Pokemon");
 
@@ -72,7 +75,7 @@ public class AnimeRepositoryTest {
 
 
         Assertions.assertEquals(animeSalvoId, animeAtualizado.getId());
-        Assertions.assertNotEquals(animeASerSalvo.getNome(), animeAtualizado.getNome());
+        Assertions.assertNotEquals("Dbz", animeAtualizado.getNome());
 
 
     }
